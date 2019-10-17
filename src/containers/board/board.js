@@ -1,4 +1,5 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
+import { connect } from "react-redux";
 
 import Cell from "../../components/cell/cell";
 import styled from "styled-components";
@@ -26,7 +27,7 @@ class Board extends Component {
 
   calcCellSize = () => {
     const size = this.state.boardSize / this.state.cols;
-    this.setState({cellSize: size})
+    this.setState({ cellSize: size });
   };
 
   componentDidMount() {
@@ -36,6 +37,14 @@ class Board extends Component {
     if (this.state.cellSize === "") {
       this.calcCellSize();
     }
+
+    this.moveUp();
+  }
+
+  moveUp() {
+    const current = this.state.snakeCoords;
+
+    console.log(current);
   }
 
   render() {
@@ -49,11 +58,24 @@ class Board extends Component {
     return (
       <Board>
         {this.state.cells.map(coord => {
-          return <Cell key={coord} coord={coord} size={this.state.cellSize} />;
+          return (
+            <Cell
+              key={coord}
+              coord={coord}
+              size={this.state.cellSize}
+              snakeCoords={this.props.snakeCoords}
+            />
+          );
         })}
       </Board>
     );
   }
 }
 
-export default Board;
+const mapStateToProps = state => {
+  return {
+    snakeCoords: state.snakeCoords
+  };
+};
+
+export default connect(mapStateToProps)(Board);
