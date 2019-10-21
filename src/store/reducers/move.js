@@ -1,14 +1,15 @@
 import React from "react";
-import * as actionTypes from "./actions";
-
+import * as actionTypes from "../actions";
 
 const initialState = {
-  cols: 10,
+  cols: 10, //cols in a row
+  boardSize: "", //in px
+  cellSize: "",
   snakeCoords: 13
 };
 
 const Reducer = (state = initialState, action) => {
-    if (action.type.indexOf("MOVE_") > -1) {
+  if (action.type.indexOf("MOVE_") > -1) {
     const currPos = state.snakeCoords.toString();
     const length = currPos.length;
     const side = length / 2;
@@ -73,6 +74,59 @@ const Reducer = (state = initialState, action) => {
       return {
         ...state,
         snakeCoords: newPos
+      };
+    case actionTypes.CALC_CELL:
+      const cellSize = state.boardSize / state.cols;
+
+      console.log(state.boardSize);
+      console.log(state.cols);
+      console.log(cellSize);
+
+      return {
+        ...state,
+        cellSize: cellSize
+      };
+    case actionTypes.CALC_BOARD:
+      let width = window.screen.width;
+      let height = window.screen.height;
+      let boardSize = 800;
+
+      console.log('width: ' + window.screen.width);
+      
+
+      if(width <= 280) {
+        boardSize = 220;
+      }
+      else if(width <= 320) {
+        boardSize = 240;
+      }
+      else if(width <= 400) {
+        boardSize = 300;
+      }
+      else if(width <= 500) {
+        boardSize = 400;
+      }
+      else if(width <= 600) {
+        boardSize = 500;
+      }
+      else if(width <= 700) {
+        boardSize = 600;
+      }
+      else if(width <= 800) {
+        boardSize = 700;
+      }
+      else if(width <= 900) {
+        boardSize = 800;
+      }
+
+      
+
+
+      console.log();
+
+      return {
+        ...state,
+        boardSize: boardSize
       };
 
     default:

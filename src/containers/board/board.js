@@ -3,11 +3,10 @@ import { connect } from "react-redux";
 
 import Cell from "../../components/cell/cell";
 import styled from "styled-components";
+import * as actionTypes from "../../store/actions";
 
 class Board extends Component {
   state = {
-    boardSize: 800,
-    cellSize: "",
     cells: []
   };
 
@@ -24,24 +23,25 @@ class Board extends Component {
     this.setState({ cells: coordArray });
   };
 
-  calcCellSize = () => {
-    const size = this.state.boardSize / this.props.cols;
-    this.setState({ cellSize: size });
-  };
-
   componentDidMount() {
+    console.log(this.props);
+    
     if (this.state.cells.length === 0) {
       this.createCoords();
     }
-    if (this.state.cellSize === "") {
-      this.calcCellSize();
+    if (this.props.boardSize === "") {
+      this.props.calcBoardSize();
+    }
+    if (this.props.cellSize === "") {
+      this.props.calcCellSize();
     }
   }
 
   render() {
     const Board = styled.div`
-      width: ${this.state.boardSize}px;
-      height: ${this.state.boardSize}px;
+      width: ${this.props.boardSize}px;
+      height: ${this.props.boardSize}px;
+      height: 80%;
       display: flex;
       flex-wrap: wrap;
     `;
@@ -53,7 +53,7 @@ class Board extends Component {
             <Cell
               key={coord}
               coord={coord}
-              size={this.state.cellSize}
+              size={this.props.cellSize}
               snakeCoords={this.props.snakeCoords}
             />
           );
@@ -65,9 +65,21 @@ class Board extends Component {
 
 const mapStateToProps = state => {
   return {
-    cols: state.cols,
-    snakeCoords: state.snakeCoords
+    cols: state.move.cols,
+    boardSize: state.move.boardSize,
+    cellSize: state.move.cellSize,
+    snakeCoords: state.move.snakeCoords
   };
 };
 
-export default connect(mapStateToProps)(Board);
+const mapDispatchToProps = dispatch => {
+  return {
+    calcBoardSize: () => dispatch({ type: actionTypes.CALC_BOARD }),
+    calcCellSize: () => dispatch({ type: actionTypes.CALC_CELL })
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Board);

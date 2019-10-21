@@ -3,12 +3,13 @@ import styled from "styled-components";
 
 
 const Cell = props => {
-  
-  const Inside = styled.div``;
+
   const Wrapper = styled.div`
     background: papayawhip;
     width: ${props.size}px;
     height: ${props.size}px;
+    // width: 10%;
+    // height: 10%;
     border: 1px solid black;
     text-align: center;
     display: flex;
@@ -24,9 +25,6 @@ const Cell = props => {
   `
 
   let content = <div>{props.coord}</div>;
-
-  // console.log(props.coord);
-  // console.log(props.snakeCoords);
 
   if(+props.snakeCoords === +props.coord){
     content = <Snake />

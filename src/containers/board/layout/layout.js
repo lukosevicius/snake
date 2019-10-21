@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import styled from "styled-components";
+import Topbar from "../../../components/topbar/topbar";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -7,13 +8,17 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin-top: 20px;
   margin-bottom: 20px;
 `;
 
 class Layout extends Component {
   render() {
-    return <Wrapper>{this.props.children}</Wrapper>;
+    return (
+      <Wrapper>
+        <Topbar />
+        {this.props.children}
+      </Wrapper>
+    );
   }
 }
 
