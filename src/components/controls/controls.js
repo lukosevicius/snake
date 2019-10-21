@@ -9,6 +9,25 @@ const Controls = props => {
     margin-top: 20px;
   `;
 
+  document.onkeydown = function(e) {
+    e = e || window.event;
+    // console.log(e.key);
+    switch (e.key) {
+      case "ArrowUp":
+        props.up();
+        break;
+      case "ArrowDown":
+        props.down();
+        break;
+      case "ArrowLeft":
+        props.left();
+        break;
+      case "ArrowRight":
+        props.right();
+        break;
+    }
+  };
+
   return (
     <Wrapper>
       <Button clicked={props.up}>Up</Button>

@@ -8,7 +8,7 @@ const initialState = {
 };
 
 const Reducer = (state = initialState, action) => {
-  if (action.type.indexOf("MOVE_") > -1) {
+    if (action.type.indexOf("MOVE_") > -1) {
     const currPos = state.snakeCoords.toString();
     const length = currPos.length;
     const side = length / 2;
