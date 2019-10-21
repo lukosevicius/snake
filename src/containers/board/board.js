@@ -6,7 +6,6 @@ import styled from "styled-components";
 
 class Board extends Component {
   state = {
-    cols: 10,
     boardSize: 800,
     cellSize: "",
     cells: []
@@ -15,8 +14,8 @@ class Board extends Component {
   createCoords = () => {
     const coordArray = [];
 
-    for (let x = 0; x < this.state.cols; x++) {
-      for (let y = 0; y < this.state.cols; y++) {
+    for (let x = 0; x < this.props.cols; x++) {
+      for (let y = 0; y < this.props.cols; y++) {
         let coord = x.toString() + y.toString();
 
         coordArray.push(coord);
@@ -26,7 +25,7 @@ class Board extends Component {
   };
 
   calcCellSize = () => {
-    const size = this.state.boardSize / this.state.cols;
+    const size = this.state.boardSize / this.props.cols;
     this.setState({ cellSize: size });
   };
 
@@ -37,14 +36,6 @@ class Board extends Component {
     if (this.state.cellSize === "") {
       this.calcCellSize();
     }
-
-    this.moveUp();
-  }
-
-  moveUp() {
-    const current = this.state.snakeCoords;
-
-    console.log(current);
   }
 
   render() {
@@ -74,6 +65,7 @@ class Board extends Component {
 
 const mapStateToProps = state => {
   return {
+    cols: state.cols,
     snakeCoords: state.snakeCoords
   };
 };
