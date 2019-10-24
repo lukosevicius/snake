@@ -26,10 +26,9 @@ const Cell = props => {
 
   let content = <div>{props.coord}</div>;
 
-  if(+props.snakeCoords === +props.coord){
+  if(props.snakeCoords.indexOf(+props.coord) > -1){
     content = <Snake />
   }
-  
 
   return (
     <Wrapper>

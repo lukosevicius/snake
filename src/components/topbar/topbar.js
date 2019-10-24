@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import { connect } from "react-redux";
+
 
 const Topbar = props => {
   const Header = styled.div`
@@ -12,13 +14,19 @@ const Topbar = props => {
     padding: 0 20px;
     margin-bottom: 40px;
   `;
+console.log(props);
 
   return (
     <Header>
       <div>Snake</div>
-      <div>Level: 1</div>
+      <div>Length: {props.snakeLength}</div>
     </Header>
   );
 };
+const mapStateToProps = state => {
+  return {
+    snakeLength: state.move.snakeLength
+  };
+};
 
-export default Topbar;
+export default connect(mapStateToProps)(Topbar);

@@ -11,12 +11,18 @@ const Wrapper = styled.div`
   margin-bottom: 20px;
 `;
 
+const Main = styled.div`
+  @media (min-width: 1200px) {
+    display: flex;
+  }
+`;
+
 class Layout extends Component {
   render() {
     return (
       <Wrapper>
         <Topbar />
-        {this.props.children}
+        <Main>{this.props.children}</Main>
       </Wrapper>
     );
   }

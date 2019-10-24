@@ -24,8 +24,6 @@ class Board extends Component {
   };
 
   componentDidMount() {
-    console.log(this.props);
-    
     if (this.state.cells.length === 0) {
       this.createCoords();
     }
