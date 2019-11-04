@@ -44,6 +44,8 @@ class Board extends Component {
       flex-wrap: wrap;
     `;
 
+    
+    
     return (
       <Board>
         {this.state.cells.map(coord => {

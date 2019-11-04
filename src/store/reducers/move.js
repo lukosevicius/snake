@@ -5,8 +5,8 @@ import { EWOULDBLOCK } from "constants";
 const initialState = {
   cols: 10, //cols in a row
   boardSize: 800, //in px
-  cellSize: 80,
-  snakeCoords: [43, 44],
+  cellSize: 80, 
+  snakeCoords: [45],
   snakeLength: 1,
   direction: "RIGHT"
 };
@@ -23,7 +23,7 @@ const Reducer = (state = initialState, action) => {
   }
 
   const combine = (X, Y) => {
-    return [X.toString() + Y.toString()];
+    return [+(X.toString() + Y.toString())];
   };
 
   switch (action.type) {
@@ -86,6 +86,16 @@ const Reducer = (state = initialState, action) => {
       };
 
     case actionTypes.GROW:
+
+      // switch (state.direction) {
+      //   case "RIGHT":
+      //       if (Y === 0) {
+      //         Y = state.cols;
+      //       }
+      //       Y = Y - 1;
+      
+      //       newPos = combine(X, Y);
+      // }
       return {
         ...state,
         snakeLength: state.snakeLength + 1
