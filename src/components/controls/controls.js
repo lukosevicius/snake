@@ -49,6 +49,8 @@ const Controls = props => {
       case "ArrowRight":
         props.right();
         break;
+      default:
+        break;
     }
   };
 

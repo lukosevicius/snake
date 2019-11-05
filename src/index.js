@@ -7,11 +7,11 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import moveReducer from "./store/reducers/move";
-import sizesReducer from "./store/reducers/sizes";
+// import sizesReducer from "./store/reducers/sizes";
 
 const rootReducer = combineReducers({
-    move: moveReducer,
-    sizes: sizesReducer
+    move: moveReducer
+    // sizes: sizesReducer
 })
 
 const logger = store => {

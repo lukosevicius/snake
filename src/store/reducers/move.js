@@ -1,6 +1,4 @@
-import React from "react";
 import * as actionTypes from "../actions";
-import { EWOULDBLOCK } from "constants";
 
 const initialState = {
   cols: 10, //cols in a row
@@ -9,21 +7,17 @@ const initialState = {
   snake: [
     { coord: 44, dir: "LEFT" },
     { coord: 45, dir: "LEFT" },
-    { coord: 46, dir: "LEFT" }
+    { coord: 46, dir: "LEFT" },
+    { coord: 47, dir: "LEFT" },
+    { coord: 48, dir: "LEFT" }
   ],
-  snakeLength: 1,
+  snakeLength: 5,
   direction: "RIGHT"
 };
 
 const Reducer = (state = initialState, action) => {
   if (action.type.indexOf("MOVE_") > -1 || action.type.indexOf("GROW") > -1) {
     var newSnakeCoords = [];
-    const currPos = state.snake[0].toString();
-    const length = currPos.length;
-    const side = length / 2;
-
-    var X = +currPos.substring(0, side);
-    var Y = +currPos.substring(side);
     var newPos = "";
   }
 
@@ -44,15 +38,18 @@ const Reducer = (state = initialState, action) => {
     };
   };
 
-  const move = (direction, X, Y) => {
+  const move = (direction, coord) => {
+    let X = getX(coord);
+    let Y = getY(coord);
+
     switch (direction) {
-      case "UP":
+      case "MOVE_UP":
         if (X === 0) {
           X = state.cols;
         }
         X = X - 1;
         break;
-      case "DOWN":
+      case "MOVE_DOWN":
         if (X === state.cols - 1) {
           X = 0;
         } else {
@@ -60,7 +57,7 @@ const Reducer = (state = initialState, action) => {
         }
         break;
 
-      case "LEFT":
+      case "MOVE_LEFT":
         if (Y === 0) {
           Y = state.cols;
         } else {
@@ -68,7 +65,7 @@ const Reducer = (state = initialState, action) => {
         }
         break;
 
-      case "RIGHT":
+      case "MOVE_RIGHT":
         if (Y === state.cols - 1) {
           Y = 0;
         } else {
@@ -83,82 +80,38 @@ const Reducer = (state = initialState, action) => {
     return combine(X, Y, direction);
   };
 
+  const moveSnake = (direction) => {
+    let updatedSnake = [];
+
+    let head = move(direction, state.snake[0].coord);
+    let tail = state.snake.slice(0, state.snakeLength - 1);
+
+    updatedSnake = updatedSnake.concat(head);
+    updatedSnake = updatedSnake.concat(tail);
+
+    return updatedSnake;
+  };
+
   switch (action.type) {
     case actionTypes.MOVE_UP:
-      state.snake.forEach((snakeElement, index) => {
-        X = getX(snakeElement.coord);
-        Y = getY(snakeElement.coord);
-
-        if (index === 0) {
-          newPos = move("UP", X, Y);
-        } else {
-          // console.log(snakeElement[index - 1][1]);
-
-          newPos = move(state.direction, X, Y);
-        }
-
-        newSnakeCoords = newSnakeCoords.concat(newPos);
-      });
-
-      console.log(newSnakeCoords);
-
       return {
         ...state,
-        snake: newSnakeCoords,
-        direction: "UP"
+        snake: moveSnake(actionTypes.MOVE_UP)
       };
-
     case actionTypes.MOVE_DOWN:
-      state.snake.forEach((coord, index) => {
-        X = getX(coord);
-        Y = getY(coord);
-
-        newPos = move("DOWN", X, Y);
-        newSnakeCoords = newSnakeCoords.concat(newPos);
-      });
-
-      console.log(newSnakeCoords);
-
       return {
         ...state,
-        snake: newSnakeCoords,
-        direction: "DOWN"
+        snake: moveSnake(actionTypes.MOVE_DOWN)
       };
-
     case actionTypes.MOVE_LEFT:
-      state.snake.forEach(element => {
-        X = getX(element.coord);
-        Y = getY(element.coord);
-
-        newPos = move("LEFT", X, Y);
-
-        newSnakeCoords.push(newPos);
-      });
-
-      console.log(newSnakeCoords);
-
       return {
         ...state,
-        snake: newSnakeCoords,
-        direction: "LEFT"
+        snake: moveSnake(actionTypes.MOVE_LEFT)
       };
-
     case actionTypes.MOVE_RIGHT:
-      state.snake.forEach(element => {
-        X = getX(element.coord);
-        Y = getY(element.coord);
-
-        newPos = move("RIGHT", X, Y);
-
-        newSnakeCoords = newSnakeCoords.concat(newPos);
-      });
-
-      console.log(newSnakeCoords);
-
       return {
         ...state,
-        snake: newSnakeCoords,
-        direction: "RIGHT"
+        snake: moveSnake(actionTypes.MOVE_RIGHT)
       };
 
     // case actionTypes.GROW:
@@ -193,7 +146,7 @@ const Reducer = (state = initialState, action) => {
 
     case actionTypes.CALC_BOARD:
       let width = window.screen.width;
-      let height = window.screen.height;
+      // let height = window.screen.height;
       let boardSize = 800;
 
       if (width <= 280) {

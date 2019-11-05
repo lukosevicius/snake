@@ -23,17 +23,13 @@ const Cell = props => {
   `;
 
   let content = <div>{props.coord}</div>;
-  
+
   let snakeCoords = [];
-  
+
   props.snake.forEach(element => {
-    
-    snakeCoords.push(element.coord)
+    snakeCoords.push(element.coord);
   });
 
-  // console.log(snakeCoords);
-  
-  
   //Check if snake should be printed in this cell
   if (snakeCoords.indexOf(+props.coord) > -1) {
     content = <Snake />;
