@@ -54,7 +54,7 @@ class Board extends Component {
               key={coord}
               coord={coord}
               size={this.props.cellSize}
-              snakeCoords={this.props.snakeCoords}
+              snake={this.props.snake}
             />
           );
         })}
@@ -68,7 +68,7 @@ const mapStateToProps = state => {
     cols: state.move.cols,
     boardSize: state.move.boardSize,
     cellSize: state.move.cellSize,
-    snakeCoords: state.move.snakeCoords
+    snake: state.move.snake
   };
 };
 

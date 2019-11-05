@@ -6,17 +6,19 @@ const initialState = {
   cols: 10, //cols in a row
   boardSize: 800, //in px
   cellSize: 80,
-  snakeCoords: [44, 45, 46],
+  snake: [
+    { coord: 44, dir: "LEFT" },
+    { coord: 45, dir: "LEFT" },
+    { coord: 46, dir: "LEFT" }
+  ],
   snakeLength: 1,
   direction: "RIGHT"
 };
 
 const Reducer = (state = initialState, action) => {
-  // if (action.type.indexOf("MOVE_") > -1) {
-
   if (action.type.indexOf("MOVE_") > -1 || action.type.indexOf("GROW") > -1) {
     var newSnakeCoords = [];
-    const currPos = state.snakeCoords[0].toString();
+    const currPos = state.snake[0].toString();
     const length = currPos.length;
     const side = length / 2;
 
@@ -35,8 +37,11 @@ const Reducer = (state = initialState, action) => {
     return +coord.substring(coord.length / 2);
   };
 
-  const combine = (X, Y) => {
-    return [+(X.toString() + Y.toString())];
+  const combine = (X, Y, direction) => {
+    return {
+      coord: +(X.toString() + Y.toString()),
+      dir: direction
+    };
   };
 
   const move = (direction, X, Y) => {
@@ -75,20 +80,22 @@ const Reducer = (state = initialState, action) => {
         break;
     }
 
-    return combine(X, Y);
+    return combine(X, Y, direction);
   };
 
   switch (action.type) {
     case actionTypes.MOVE_UP:
-      state.snakeCoords.forEach((coord, index) => {
-        X = getX(coord);
-        Y = getY(coord);
+      state.snake.forEach((snakeElement, index) => {
+        X = getX(snakeElement.coord);
+        Y = getY(snakeElement.coord);
 
-        // if (index === 0) {
-        newPos = move("UP", X, Y);
-        // } else {
-        //   newPos = move(state.direction, X, Y);
-        // }
+        if (index === 0) {
+          newPos = move("UP", X, Y);
+        } else {
+          // console.log(snakeElement[index - 1][1]);
+
+          newPos = move(state.direction, X, Y);
+        }
 
         newSnakeCoords = newSnakeCoords.concat(newPos);
       });
@@ -97,12 +104,12 @@ const Reducer = (state = initialState, action) => {
 
       return {
         ...state,
-        snakeCoords: newSnakeCoords,
+        snake: newSnakeCoords,
         direction: "UP"
       };
 
     case actionTypes.MOVE_DOWN:
-      state.snakeCoords.forEach((coord, index) => {
+      state.snake.forEach((coord, index) => {
         X = getX(coord);
         Y = getY(coord);
 
@@ -114,32 +121,32 @@ const Reducer = (state = initialState, action) => {
 
       return {
         ...state,
-        snakeCoords: newSnakeCoords,
+        snake: newSnakeCoords,
         direction: "DOWN"
       };
 
     case actionTypes.MOVE_LEFT:
-      state.snakeCoords.forEach(coord => {
-        X = getX(coord);
-        Y = getY(coord);
+      state.snake.forEach(element => {
+        X = getX(element.coord);
+        Y = getY(element.coord);
 
         newPos = move("LEFT", X, Y);
 
-        newSnakeCoords = newSnakeCoords.concat(newPos);
+        newSnakeCoords.push(newPos);
       });
 
       console.log(newSnakeCoords);
 
       return {
         ...state,
-        snakeCoords: newSnakeCoords,
+        snake: newSnakeCoords,
         direction: "LEFT"
       };
 
     case actionTypes.MOVE_RIGHT:
-      state.snakeCoords.forEach(coord => {
-        X = getX(coord);
-        Y = getY(coord);
+      state.snake.forEach(element => {
+        X = getX(element.coord);
+        Y = getY(element.coord);
 
         newPos = move("RIGHT", X, Y);
 
@@ -150,7 +157,7 @@ const Reducer = (state = initialState, action) => {
 
       return {
         ...state,
-        snakeCoords: newSnakeCoords,
+        snake: newSnakeCoords,
         direction: "RIGHT"
       };
 
@@ -165,7 +172,7 @@ const Reducer = (state = initialState, action) => {
     //       newPos = combine(X, Y);
     //   }
 
-    //   let newSnakeCoords = state.snakeCoords;
+    //   let newSnakeCoords = state.snake;
     //   newSnakeCoords = newSnakeCoords.concat(newPos);
 
     //   console.log(newSnakeCoords);
@@ -173,7 +180,7 @@ const Reducer = (state = initialState, action) => {
     //   return {
     //     ...state,
     //     snakeLength: state.snakeLength + 1,
-    //     snakeCoords: newSnakeCoords
+    //     snake: newSnakeCoords
     //   };
 
     case actionTypes.CALC_CELL:
