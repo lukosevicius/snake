@@ -12,13 +12,15 @@ const initialState = {
     { coord: 48, dir: "LEFT" }
   ],
   snakeLength: 5,
-  direction: "RIGHT"
+  direction: "MOVE_RIGHT"
 };
 
 const Reducer = (state = initialState, action) => {
   if (action.type.indexOf("MOVE_") > -1 || action.type.indexOf("GROW") > -1) {
     var newSnakeCoords = [];
     var newPos = "";
+    var updatedSnake;
+    var updatedDirection;
   }
 
   const getX = coord => {
@@ -59,7 +61,7 @@ const Reducer = (state = initialState, action) => {
 
       case "MOVE_LEFT":
         if (Y === 0) {
-          Y = state.cols;
+          Y = state.cols - 1;
         } else {
           Y = Y - 1;
         }
@@ -80,7 +82,7 @@ const Reducer = (state = initialState, action) => {
     return combine(X, Y, direction);
   };
 
-  const moveSnake = (direction) => {
+  const moveSnake = direction => {
     let updatedSnake = [];
 
     let head = move(direction, state.snake[0].coord);
@@ -94,24 +96,64 @@ const Reducer = (state = initialState, action) => {
 
   switch (action.type) {
     case actionTypes.MOVE_UP:
+      //disallow to move backwards
+      if (state.direction == "MOVE_DOWN") {
+        updatedSnake = state.snake;
+        updatedDirection = state.direction;
+      } else {
+        updatedSnake = moveSnake("MOVE_UP");
+        updatedDirection = "MOVE_UP";
+      }
+
       return {
         ...state,
-        snake: moveSnake(actionTypes.MOVE_UP)
+        snake: updatedSnake,
+        direction: updatedDirection
       };
     case actionTypes.MOVE_DOWN:
+      //disallow to move backwards
+      if (state.direction == "MOVE_UP") {
+        updatedSnake = state.snake;
+        updatedDirection = state.direction;
+      } else {
+        updatedSnake = moveSnake("MOVE_DOWN");
+        updatedDirection = "MOVE_DOWN";
+      }
+
       return {
         ...state,
-        snake: moveSnake(actionTypes.MOVE_DOWN)
+        snake: updatedSnake,
+        direction: updatedDirection
       };
     case actionTypes.MOVE_LEFT:
+      //disallow to move backwards
+      if (state.direction == "MOVE_RIGHT") {
+        updatedSnake = state.snake;
+        updatedDirection = state.direction;
+      } else {
+        updatedSnake = moveSnake("MOVE_LEFT");
+        updatedDirection = "MOVE_LEFT";
+      }
+
       return {
         ...state,
-        snake: moveSnake(actionTypes.MOVE_LEFT)
+        snake: updatedSnake,
+        direction: updatedDirection
       };
     case actionTypes.MOVE_RIGHT:
+      //disallow to move backwards
+      if (state.direction == "MOVE_LEFT") {
+        updatedSnake = state.snake;
+        updatedDirection = state.direction;
+      } else {
+        updatedSnake = moveSnake("MOVE_RIGHT");
+        updatedDirection = "MOVE_RIGHT";
+      }
+
       return {
         ...state,
-        snake: moveSnake(actionTypes.MOVE_RIGHT)
+        snake: updatedSnake,
+        direction: updatedDirection
       };
 
     // case actionTypes.GROW:
