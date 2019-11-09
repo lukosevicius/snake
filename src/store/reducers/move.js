@@ -5,20 +5,20 @@ const initialState = {
   boardSize: 800, //in px
   cellSize: 80,
   snake: [
-    { coord: 44, dir: "LEFT" },
-    { coord: 45, dir: "LEFT" },
-    { coord: 46, dir: "LEFT" },
-    { coord: 47, dir: "LEFT" },
-    { coord: 48, dir: "LEFT" }
+    { coord: "44", dir: "LEFT" },
+    { coord: "45", dir: "LEFT" },
+    { coord: "46", dir: "LEFT" },
+    { coord: "47", dir: "LEFT" },
+    { coord: "48", dir: "LEFT" }
   ],
   snakeLength: 5,
-  direction: "MOVE_RIGHT"
+  direction: "MOVE_LEFT"
 };
 
 const Reducer = (state = initialState, action) => {
   if (action.type.indexOf("MOVE_") > -1 || action.type.indexOf("GROW") > -1) {
-    var newSnakeCoords = [];
-    var newPos = "";
+    // var newSnakeCoords = [];
+    // var newPos = "";
     var updatedSnake;
     var updatedDirection;
   }
@@ -35,7 +35,7 @@ const Reducer = (state = initialState, action) => {
 
   const combine = (X, Y, direction) => {
     return {
-      coord: +(X.toString() + Y.toString()),
+      coord: X.toString() + Y.toString(),
       dir: direction
     };
   };
@@ -97,7 +97,7 @@ const Reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.MOVE_UP:
       //disallow to move backwards
-      if (state.direction == "MOVE_DOWN") {
+      if (state.direction === "MOVE_DOWN") {
         updatedSnake = state.snake;
         updatedDirection = state.direction;
       } else {
@@ -112,7 +112,7 @@ const Reducer = (state = initialState, action) => {
       };
     case actionTypes.MOVE_DOWN:
       //disallow to move backwards
-      if (state.direction == "MOVE_UP") {
+      if (state.direction === "MOVE_UP") {
         updatedSnake = state.snake;
         updatedDirection = state.direction;
       } else {
@@ -127,7 +127,7 @@ const Reducer = (state = initialState, action) => {
       };
     case actionTypes.MOVE_LEFT:
       //disallow to move backwards
-      if (state.direction == "MOVE_RIGHT") {
+      if (state.direction ==="MOVE_RIGHT") {
         updatedSnake = state.snake;
         updatedDirection = state.direction;
       } else {
@@ -142,7 +142,7 @@ const Reducer = (state = initialState, action) => {
       };
     case actionTypes.MOVE_RIGHT:
       //disallow to move backwards
-      if (state.direction == "MOVE_LEFT") {
+      if (state.direction === "MOVE_LEFT") {
         updatedSnake = state.snake;
         updatedDirection = state.direction;
       } else {

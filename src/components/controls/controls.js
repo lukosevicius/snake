@@ -73,9 +73,9 @@ const Controls = props => {
             <Button clicked={props.right}>Right</Button>
           </ButtonWrapper>
         </Bottom>
-        <div>
+        {/* <div>
           <Button clicked={props.grow}>Grow</Button>
-        </div>
+        </div> */}
       </Main>
     </Wrapper>
   );
