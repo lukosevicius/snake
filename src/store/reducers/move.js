@@ -5,44 +5,43 @@ const initialState = {
   boardSize: 800, //in px
   cellSize: 80,
   snake: [
-    { coord: "44", dir: "LEFT" },
-    { coord: "45", dir: "LEFT" },
-    { coord: "46", dir: "LEFT" },
-    { coord: "47", dir: "LEFT" },
-    { coord: "48", dir: "LEFT" }
+    // { coords: "44", dir: "MOVE_LEFT" },
+    { coords: "45", dir: "MOVE_LEFT" },
+    { coords: "46", dir: "MOVE_LEFT" },
+    { coords: "47", dir: "MOVE_LEFT" }
   ],
-  snakeLength: 5,
-  direction: "MOVE_LEFT"
+  snakeLength: 3,
+  direction: "MOVE_LEFT",
+  appleCoords: "42",
+  canGrow: true
 };
 
 const Reducer = (state = initialState, action) => {
   if (action.type.indexOf("MOVE_") > -1 || action.type.indexOf("GROW") > -1) {
-    // var newSnakeCoords = [];
-    // var newPos = "";
     var updatedSnake;
     var updatedDirection;
   }
 
-  const getX = coord => {
-    coord = coord.toString();
-    return +coord.substring(0, coord.length / 2);
+  const getX = coords => {
+    coords = coords.toString();
+    return +coords.substring(0, coords.length / 2);
   };
 
-  const getY = coord => {
-    coord = coord.toString();
-    return +coord.substring(coord.length / 2);
+  const getY = coords => {
+    coords = coords.toString();
+    return +coords.substring(coords.length / 2);
   };
 
   const combine = (X, Y, direction) => {
     return {
-      coord: X.toString() + Y.toString(),
+      coords: X.toString() + Y.toString(),
       dir: direction
     };
   };
 
-  const move = (direction, coord) => {
-    let X = getX(coord);
-    let Y = getY(coord);
+  const move = (direction, coords) => {
+    let X = getX(coords);
+    let Y = getY(coords);
 
     switch (direction) {
       case "MOVE_UP":
@@ -85,7 +84,7 @@ const Reducer = (state = initialState, action) => {
   const moveSnake = direction => {
     let updatedSnake = [];
 
-    let head = move(direction, state.snake[0].coord);
+    let head = move(direction, state.snake[0].coords);
     let tail = state.snake.slice(0, state.snakeLength - 1);
 
     updatedSnake = updatedSnake.concat(head);
@@ -108,7 +107,8 @@ const Reducer = (state = initialState, action) => {
       return {
         ...state,
         snake: updatedSnake,
-        direction: updatedDirection
+        direction: updatedDirection,
+        canGrow: true
       };
     case actionTypes.MOVE_DOWN:
       //disallow to move backwards
@@ -123,11 +123,12 @@ const Reducer = (state = initialState, action) => {
       return {
         ...state,
         snake: updatedSnake,
-        direction: updatedDirection
+        direction: updatedDirection,
+        canGrow: true
       };
     case actionTypes.MOVE_LEFT:
       //disallow to move backwards
-      if (state.direction ==="MOVE_RIGHT") {
+      if (state.direction === "MOVE_RIGHT") {
         updatedSnake = state.snake;
         updatedDirection = state.direction;
       } else {
@@ -138,7 +139,8 @@ const Reducer = (state = initialState, action) => {
       return {
         ...state,
         snake: updatedSnake,
-        direction: updatedDirection
+        direction: updatedDirection,
+        canGrow: true
       };
     case actionTypes.MOVE_RIGHT:
       //disallow to move backwards
@@ -153,30 +155,40 @@ const Reducer = (state = initialState, action) => {
       return {
         ...state,
         snake: updatedSnake,
-        direction: updatedDirection
+        direction: updatedDirection,
+        canGrow: true
       };
 
-    // case actionTypes.GROW:
-    //   switch (state.direction) {
-    //     case "RIGHT":
-    //       if (Y === 0) {
-    //         Y = state.cols;
-    //       }
-    //       Y = Y - 1;
+    case actionTypes.GROW:
+      let snakeTailCoord = state.snake[state.snakeLength - 1].coords;
+      let snakeTailDir = state.snake[state.snakeLength - 1].dir;
+      let newTail = null;
 
-    //       newPos = combine(X, Y);
-    //   }
+      switch (snakeTailDir) {
+        case "MOVE_LEFT":
+          newTail = move("MOVE_RIGHT", snakeTailCoord);
+          break;
+        case "MOVE_RIGHT":
+          newTail = move("MOVE_LEFT", snakeTailCoord);
+          break;
+        case "MOVE_UP":
+          newTail = move("MOVE_DOWN", snakeTailCoord);
+          break;
+        case "MOVE_DOWN":
+          newTail = move("MOVE_UP", snakeTailCoord);
+          break;
+        default:
+          break;
+      }
 
-    //   let newSnakeCoords = state.snake;
-    //   newSnakeCoords = newSnakeCoords.concat(newPos);
+      updatedSnake = state.snake.concat(newTail);
 
-    //   console.log(newSnakeCoords);
-
-    //   return {
-    //     ...state,
-    //     snakeLength: state.snakeLength + 1,
-    //     snake: newSnakeCoords
-    //   };
+      return {
+        ...state,
+        snakeLength: state.snakeLength + 1,
+        snake: updatedSnake,
+        canGrow: false
+      };
 
     case actionTypes.CALC_CELL:
       const cellSize = state.boardSize / state.cols;

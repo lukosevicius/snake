@@ -7,7 +7,8 @@ import * as actionTypes from "../../store/actions";
 
 class Board extends Component {
   state = {
-    cells: []
+    cells: [],
+    canGrow: true
   };
 
   createCoords = () => {
@@ -33,6 +34,7 @@ class Board extends Component {
     if (this.props.cellSize === "") {
       this.props.calcCellSize();
     }
+
   }
 
   render() {
@@ -44,17 +46,53 @@ class Board extends Component {
       flex-wrap: wrap;
     `;
 
-    
-    
+    let snakeHeadCoords = this.props.snake[0].coords;
+
+    let snakeBodyArray = this.props.snake.slice(1, this.props.snakeLength - 1);
+    let snakeBodyCoords = [];
+    snakeBodyArray.forEach(element => {
+      snakeBodyCoords.push(element.coords);
+    });
+
+    let snakeTailCoords = this.props.snake[this.props.snakeLength - 1].coords;
+
+    if ((this.props.appleCoords === this.props.snake[0].coords) && this.props.canGrow) {
+      this.props.grow();
+    }
+
     return (
       <Board>
-        {this.state.cells.map(coord => {
+        {this.state.cells.map(coords => {
+          let hasApple = false;
+          if (coords === this.props.appleCoords) {
+            hasApple = true;
+          }
+
+          let snakeHead = false;
+          if (coords === snakeHeadCoords) {
+            snakeHead = true;
+          }
+
+          let snakeBody = false;
+          if (snakeBodyCoords.indexOf(coords) > -1) {
+            snakeBody = true;
+          }
+
+          let snakeTail = false;
+          if (coords === snakeTailCoords) {
+            snakeTail = true;
+          }
+
           return (
             <Cell
-              key={coord}
-              coord={coord}
+              key={coords}
+              coords={coords}
               size={this.props.cellSize}
               snake={this.props.snake}
+              hasApple={hasApple}
+              snakeHead={snakeHead}
+              snakeBody={snakeBody}
+              snakeTail={snakeTail}
             />
           );
         })}
@@ -68,14 +106,19 @@ const mapStateToProps = state => {
     cols: state.move.cols,
     boardSize: state.move.boardSize,
     cellSize: state.move.cellSize,
-    snake: state.move.snake
+    snake: state.move.snake,
+    snakeLength: state.move.snakeLength,
+    appleCoords: state.move.appleCoords,
+    canGrow: state.move.canGrow
+
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     calcBoardSize: () => dispatch({ type: actionTypes.CALC_BOARD }),
-    calcCellSize: () => dispatch({ type: actionTypes.CALC_CELL })
+    calcCellSize: () => dispatch({ type: actionTypes.CALC_CELL }),
+    grow: () => dispatch({ type: actionTypes.GROW })
   };
 };
 
