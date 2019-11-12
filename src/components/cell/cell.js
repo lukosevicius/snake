@@ -37,7 +37,8 @@ const Cell = props => {
     background-color: orange;
   `;
 
-  let content = <div>{props.coords}</div>;
+  let content = <div></div>;
+  // let content = <div>{props.coords}</div>;
 
   if (props.hasApple) {
     content = <Apple />;

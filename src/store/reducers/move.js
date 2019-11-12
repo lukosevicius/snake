@@ -93,6 +93,29 @@ const Reducer = (state = initialState, action) => {
     return updatedSnake;
   };
 
+  const moveApple = snake => {
+    let usedCoords = [];    
+
+    snake.forEach(element => {
+      usedCoords.push(element.coords);
+    });
+
+    let newX;
+    let newY;
+    let newCoords;
+
+    do{
+      newX = (Math.floor(Math.random() * 10)).toString();
+      newY = (Math.floor(Math.random() * 10)).toString();
+      newCoords = newX + newY;
+    } while (usedCoords.indexOf(newCoords) > -1)
+
+    console.log("New Apple Coords: " + newCoords);
+
+    return newCoords;
+
+  }
+
   switch (action.type) {
     case actionTypes.MOVE_UP:
       //disallow to move backwards
@@ -182,11 +205,13 @@ const Reducer = (state = initialState, action) => {
       }
 
       updatedSnake = state.snake.concat(newTail);
+      // moveApple(updatedSnake);
 
       return {
         ...state,
         snakeLength: state.snakeLength + 1,
         snake: updatedSnake,
+        appleCoords: moveApple(updatedSnake),
         canGrow: false
       };
 
