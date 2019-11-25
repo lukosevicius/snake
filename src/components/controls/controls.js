@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import Button from "../button/button";
 import * as actionTypes from "../../store/actions";
 
 const Controls = props => {
+
+  const interval = setInterval(() => {
+    props.auto();
+  }, 1000);
+
   const Wrapper = styled.div`
     display: flex;
     justify-content: center;
@@ -81,11 +86,11 @@ const Controls = props => {
   );
 };
 
-const mapStateToProps = state => {
-  return {
-    currentPos: state.snakeCoords
-  };
-};
+// const mapStateToProps = state => {
+//   return {
+//     currentPos: state.snakeCoords
+//   };
+// };
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -93,11 +98,9 @@ const mapDispatchToProps = dispatch => {
     down: () => dispatch({ type: actionTypes.MOVE_DOWN }),
     left: () => dispatch({ type: actionTypes.MOVE_LEFT }),
     right: () => dispatch({ type: actionTypes.MOVE_RIGHT }),
+    auto: () => dispatch({ type: actionTypes.AUTO_MOVE }),
     grow: () => dispatch({ type: actionTypes.GROW })
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Controls);
+export default connect(null, mapDispatchToProps)(Controls);

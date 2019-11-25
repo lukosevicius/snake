@@ -110,7 +110,6 @@ const mapStateToProps = state => {
     snakeLength: state.move.snakeLength,
     appleCoords: state.move.appleCoords,
     canGrow: state.move.canGrow
-
   };
 };
 

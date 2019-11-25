@@ -13,7 +13,8 @@ const initialState = {
   snakeLength: 3,
   direction: "MOVE_LEFT",
   appleCoords: "42",
-  canGrow: true
+  canGrow: true,
+  moving: true
 };
 
 const Reducer = (state = initialState, action) => {
@@ -89,12 +90,11 @@ const Reducer = (state = initialState, action) => {
 
     updatedSnake = updatedSnake.concat(head);
     updatedSnake = updatedSnake.concat(tail);
-
     return updatedSnake;
   };
 
   const moveApple = snake => {
-    let usedCoords = [];    
+    let usedCoords = [];
 
     snake.forEach(element => {
       usedCoords.push(element.coords);
@@ -104,17 +104,16 @@ const Reducer = (state = initialState, action) => {
     let newY;
     let newCoords;
 
-    do{
-      newX = (Math.floor(Math.random() * 10)).toString();
-      newY = (Math.floor(Math.random() * 10)).toString();
+    do {
+      newX = Math.floor(Math.random() * 10).toString();
+      newY = Math.floor(Math.random() * 10).toString();
       newCoords = newX + newY;
-    } while (usedCoords.indexOf(newCoords) > -1)
+    } while (usedCoords.indexOf(newCoords) > -1);
 
     console.log("New Apple Coords: " + newCoords);
 
     return newCoords;
-
-  }
+  };
 
   switch (action.type) {
     case actionTypes.MOVE_UP:
@@ -151,7 +150,7 @@ const Reducer = (state = initialState, action) => {
       };
     case actionTypes.MOVE_LEFT:
       //disallow to move backwards
-      if (state.direction === "MOVE_RIGHT") {
+      if ((state.direction === "MOVE_RIGHT") || state.direction === "MOVE_LEFT") {
         updatedSnake = state.snake;
         updatedDirection = state.direction;
       } else {
@@ -167,7 +166,7 @@ const Reducer = (state = initialState, action) => {
       };
     case actionTypes.MOVE_RIGHT:
       //disallow to move backwards
-      if (state.direction === "MOVE_LEFT") {
+      if (state.direction === "MOVE_LEFT" || state.direction === "MOVE_RIGHT") {
         updatedSnake = state.snake;
         updatedDirection = state.direction;
       } else {
@@ -180,6 +179,16 @@ const Reducer = (state = initialState, action) => {
         snake: updatedSnake,
         direction: updatedDirection,
         canGrow: true
+      };
+
+    case actionTypes.AUTO_MOVE:
+      console.log(state.direction);
+      
+      updatedSnake = moveSnake(state.direction);
+
+      return {
+        ...state,
+        snake: updatedSnake,
       };
 
     case actionTypes.GROW:
